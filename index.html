@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Pour Toi, Mon Amour</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #b71c1c;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary-red);
+            background-size: cover;
+            background-position: center;
+            font-family: 'Dancing Script', cursive;
+            overflow: hidden;
+            color: white;
+            transition: background-image 2s ease-in-out;
+            /* FILTRE DE COULEUR DYNAMIQUE (Respiration) */
+            animation: breathe 8s infinite alternate;
+        }
+
+        @keyframes breathe {
+            0% { background-color: #b71c1c; }
+            100% { background-color: #7f0000; }
+        }
+
+        /* Le Bouton Rose Initial */
+        #mainButton {
+            padding: 20px 40px;
+            font-size: 1.8rem;
+            background-color: #ff80ab;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            z-index: 100;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* Conteneur Cœur et Texte */
+        #heartContainer { position: relative; display: none; z-index: 5; text-align: center; }
+        #heart {
+            font-size: 100px;
+            color: #ffd700;
+            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Noms et Phrases */
+        #names { font-size: 3rem; margin-top: 10px; text-shadow: 2px 2px 10px rgba(0,0,0,0.7); }
+        
+        /* Effet Machine à écrire */
+        #message { 
+            font-size: 1.8rem; 
+            margin-top: 15px; 
+            min-height: 50px; 
+            text-align: center; 
+            max-width: 85vw;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+        }
+
+        /* Compteur de temps */
+        #counter {
+            position: fixed;
+            bottom: 20px;
+            font-size: 1.2rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: none;
+        }
+
+        /* Bouton Pourquoi je t'aime */
+        #whyButton {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #ffd700;
+            color: #b71c1c;
+            border: none;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: none;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.2rem;
+        }
+
+        /* Particules et Flash */
+        .particle { position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; background: #fff59d; border-radius: 50%; pointer-events: none; }
+        #flash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 200; }
+        .falling-heart { position: fixed; top: -20px; color: #ff4081; z-index: 1; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
+        .zoom-heart { transform: scale(1.3); }
+        @keyframes flashAnim { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <button id="mainButton">Clique,Muse ❤️</button>
+    
+    <audio id="bgMusic" loop>
+        <source src="love.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="flash"></div>
+    
+    <div id="heartContainer">
+        <div id="heart">❤</div>
+        <div id="names">Babe & Mamour</div>
+        <div id="message"></div>
+        <button id="whyButton">Pourquoi je t'aime ? ✨</button>
+    </div>
+
+    <div id="counter">Nous nous aimons depuis...</div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const phrases = [
+            "Chaque seconde à tes côtés est précieuse...",
+            "Tu es mon soleil dans la tempête.",
+            "Rien n'est plus beau que ton sourire.",
+            "Je t'aime pour l'éternité."
+        ];
+
+        const raisons = [
+            "Pour ta gentillesse infinie.",
+            "Parce que tu me fais rire chaque jour.",
+            "Pour ta force et ton courage.",
+            "Simplement parce que tu es toi.",
+            "Pour la façon dont tu me regardes."
+        ];
+
+        const images = [
+            '2.jpeg',
+            '1.jpeg',
+            '3.jpeg'
+        ];
+
+        // Date de rencontre (Année, Mois-1, Jour) -> Ici 14 Février 2024
+        const dateRencontre = new Date(2024, 1, 14); 
+
+        const btn = document.getElementById('mainButton');
+        const heartContainer = document.getElementById('heartContainer');
+        const heart = document.getElementById('heart');
+        const message = document.getElementById('message');
+        const whyBtn = document.getElementById('whyButton');
+        const music = document.getElementById('bgMusic');
+        const counter = document.getElementById('counter');
+
+        btn.addEventListener('click', () => {
+            music.play().catch(()=> {
+                console.log("Lecture bloquée par le navigateur");
+            });
+            btn.style.display = 'none';
+            document.getElementById('flash').style.animation = 'flashAnim 0.6s ease-out';
+
+            setTimeout(() => {
+                heartContainer.style.display = 'block';
+                counter.style.display = 'block';
+                updateCounter();
+                startDiaporama();
+                startFallingHearts();
+                displayPhrases();
+            }, 300);
+        });
+
+        // --- MACHINE À ÉCRIRE ---
+        function typeWriter(text, i, fnCallback) {
+            if (i < text.length) {
+                message.innerHTML = text.substring(0, i+1) + '<span aria-hidden="true">|</span>';
+                setTimeout(() => typeWriter(text, i + 1, fnCallback), 7000 / 100); // Vitesse adaptée
+            } else if (typeof fnCallback == 'function') {
+                setTimeout(fnCallback, 700);
+            }
+        }
+
+        function displayPhrases() {
+            let index = 0;
+            const next = () => {
+                if (index < phrases.length) {
+                    heart.classList.add('zoom-heart');
+                    createBurst();
+                    typeWriter(phrases[index], 0, () => {
+                        setTimeout(() => {
+                            heart.classList.remove('zoom-heart');
+                            index++;
+                            setTimeout(next, 3000);
+                        }, 2000);
+                    });
+                } else {
+                    whyBtn.style.display = 'inline-block';
+                }
+            };
+            next();
+        }
+
+        // --- DIAPORAMA ---
+        let imgIndex = 0;
+        function startDiaporama() {
+            document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${images[imgIndex]}')`;
+            setInterval(() => {
+                imgIndex = (imgIndex + 1) % images.length;
+                document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${images[imgIndex]}')`;
+            }, 5000);
+        }
+
+        // --- COMPTEUR ---
+        function updateCounter() {
+            setInterval(() => {
+                const maintenant = new Date();
+                const diff = maintenant - dateRencontre;
+                const jours = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const heures = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diff / 1000 / 60) % 60);
+                const secondes = Math.floor((diff / 1000) % 60);
+                counter.innerHTML = `Ensemble depuis : ${jours}j ${heures}h ${minutes}m ${secondes}s`;
+            }, 1000);
+        }
+
+        // --- POURQUOI JE T'AIME ---
+        whyBtn.addEventListener('click', () => {
+            const r = raisons[Math.floor(Math.random() * raisons.length)];
+            message.innerHTML = "";
+            typeWriter(r, 0);
+            createBurst();
+        });
+
+        // --- EFFETS SECONDAIRES (Burst & Hearts) ---
+        function createBurst() {
+            for (let i = 0; i < 15; i++) {
+                const p = document.createElement('div');
+                p.classList.add('particle');
+                heartContainer.appendChild(p);
+                const angle = (i / 15) * Math.PI * 2;
+                const velocity = 80 + Math.random() * 60;
+                p.animate([
+                    { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
+                    { transform: `translate(calc(-50% + ${Math.cos(angle)*velocity}px), calc(-50% + ${Math.sin(angle)*velocity}px)) scale(0)`, opacity: 0 }
+                ], { duration: 1000 });
+                setTimeout(() => p.remove(), 1000);
+            }
+        }
+
+        function startFallingHearts() {
+            setInterval(() => {
+                const h = document.createElement('div');
+                h.classList.add('falling-heart');
+                h.innerHTML = '❤️';
+                h.style.left = Math.random() * 100 + 'vw';
+                h.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                h.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                document.body.appendChild(h);
+                setTimeout(() => h.remove(), 6000);
+            }, 300);
+        }
+    </script>
+</body>
+</html>
