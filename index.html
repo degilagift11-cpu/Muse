@@ -2,28 +2,20 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pour Toi, Mon Amour</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-red: #b71c1c;
-        }
+        :root { --red-pass: #b71c1c; }
 
         body {
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background-color: var(--primary-red);
-            background-size: cover;
-            background-position: center;
+            margin: 0; height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background-color: var(--red-pass);
+            background-size: cover; background-position: center;
             font-family: 'Dancing Script', cursive;
-            overflow: hidden;
-            color: white;
-            transition: background-image 2s ease-in-out;
-            /* FILTRE DE COULEUR DYNAMIQUE (Respiration) */
+            overflow: hidden; color: white;
+            transition: background 2s ease-in-out, background-color 5s ease-in-out;
             animation: breathe 8s infinite alternate;
         }
 
@@ -32,75 +24,66 @@
             100% { background-color: #7f0000; }
         }
 
-        /* Le Bouton Rose Initial */
+        /* Bouton Initial Rose */
         #mainButton {
-            padding: 20px 40px;
-            font-size: 1.8rem;
-            background-color: #ff80ab;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-            z-index: 100;
-            font-family: 'Dancing Script', cursive;
+            padding: 20px 40px; font-size: 1.8rem;
+            background-color: #ff80ab; color: white;
+            border: none; border-radius: 50px;
+            cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            z-index: 100; font-family: 'Dancing Script', cursive;
+            transition: transform 0.3s;
         }
+        #mainButton:hover { transform: scale(1.1); }
 
-        /* Conteneur Cœur et Texte */
-        #heartContainer { position: relative; display: none; z-index: 5; text-align: center; }
+        /* Conteneur Principal */
+        #heartContainer { position: relative; display: none; z-index: 5; text-align: center; transition: opacity 3s; }
+        
         #heart {
-            font-size: 100px;
-            color: #ffd700;
+            font-size: 100px; color: #ffd700; /* Doré */
             filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* Noms et Phrases */
         #names { font-size: 3rem; margin-top: 10px; text-shadow: 2px 2px 10px rgba(0,0,0,0.7); }
         
-        /* Effet Machine à écrire */
         #message { 
-            font-size: 1.8rem; 
-            margin-top: 15px; 
-            min-height: 50px; 
-            text-align: center; 
-            max-width: 85vw;
+            font-size: 1.8rem; margin-top: 15px; min-height: 80px; 
+            text-align: center; max-width: 85vw; 
             text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+            transition: color 5s ease-in-out;
         }
 
-        /* Compteur de temps */
+        /* Boutons Actions */
+        .btn-action {
+            margin: 10px; padding: 10px 20px;
+            background: #ffd700; color: #b71c1c;
+            border: none; border-radius: 20px;
+            font-weight: bold; cursor: pointer;
+            display: none; font-family: 'Dancing Script', cursive; font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        #voiceButton {
+            background: transparent; color: #ffcdd2; border: 1px solid #ffcdd2;
+            animation: pulse 2s infinite;
+        }
+
+        /* Compteur */
         #counter {
-            position: fixed;
-            bottom: 20px;
-            font-size: 1.2rem;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px 20px;
-            border-radius: 20px;
-            display: none;
+            position: fixed; bottom: 20px; font-size: 1.1rem;
+            background: rgba(0, 0, 0, 0.4); padding: 8px 15px;
+            border-radius: 20px; display: none; z-index: 10;
         }
 
-        /* Bouton Pourquoi je t'aime */
-        #whyButton {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: #ffd700;
-            color: #b71c1c;
-            border: none;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            display: none;
-            font-family: 'Dancing Script', cursive;
-            font-size: 1.2rem;
-        }
-
-        /* Particules et Flash */
+        /* Animations & Particules */
         .particle { position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; background: #fff59d; border-radius: 50%; pointer-events: none; }
         #flash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 200; }
         .falling-heart { position: fixed; top: -20px; color: #ff4081; z-index: 1; animation: fall linear forwards; }
+        
         @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
-        .zoom-heart { transform: scale(1.3); }
+        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
         @keyframes flashAnim { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+        .zoom-heart { transform: scale(1.3); }
     </style>
 </head>
 <body>
@@ -111,78 +94,92 @@
         <source src="love.mp3" type="audio/mpeg">
     </audio>
 
+    <audio id="secretVoice">
+        <source src="ma-voix.mp3" type="audio/mpeg">
+    </audio>
+
     <div id="flash"></div>
     
     <div id="heartContainer">
         <div id="heart">❤</div>
         <div id="names">Babe & Mamour</div>
         <div id="message"></div>
-        <button id="whyButton">Pourquoi je t'aime ? ✨</button>
+        <button id="whyButton" class="btn-action">Chaque fois que tu touches ici il y a une raison de…<br>Pourquoi je t'aime ? ✨</button><br>
+        <button id="voiceButton" class="btn-action">Appuie ici si tu veux entendre quelque chose… 🎤<br>Et mets d'abord les écouteurs… 🎧</button>
     </div>
 
-    <div id="counter">Nous nous aimons depuis...</div>
+    <div id="counter"></div>
 
     <script>
         // --- CONFIGURATION ---
         const phrases = [
-            "Chaque seconde à tes côtés est précieuse...",
-            "Tu es mon soleil dans la tempête.",
-            "Rien n'est plus beau que ton sourire.",
-            "Je t'aime pour l'éternité."
+            "Chaque jour à tes côtés est un cadeau...",
+            "Tu es ma plus belle aventure.",
+            "Mon cœur ne bat plus que pour toi.",
+            "Je t'aime plus que les mots ne peuvent le dire."
+        ];
+
+        const epilogue = [
+            "Et si je devais tout recommencer…",
+            "Je te choisirais encore. ❤️",
+            "Dans tout l’univers, il n’y a que toi."
         ];
 
         const raisons = [
-            "Pour ta gentillesse infinie.",
-            "Parce que tu me fais rire chaque jour.",
-            "Pour ta force et ton courage.",
-            "Simplement parce que tu es toi.",
-            "Pour la façon dont tu me regardes."
+            "Pour ton sourire qui illumine mes journées.",
+            "Parce que tu es ma meilleure amie et mon grand amour.",
+            "Pour ta patience et ta douceur.",
+            "Simplement pour qui tu es avec moi."
         ];
 
         const images = [
-            '2.jpeg',
             '1.jpeg',
+            '2.jpeg',
             '3.jpeg'
         ];
 
-        // Date de rencontre (Année, Mois-1, Jour) -> Ici 14 Février 2024
-        const dateRencontre = new Date(2024, 1, 14); 
+        // Date de rencontre : 15 Avril 2024
+        const dateRencontre = new Date(2024, 3, 15); 
 
+        // Eléments DOM
         const btn = document.getElementById('mainButton');
         const heartContainer = document.getElementById('heartContainer');
         const heart = document.getElementById('heart');
         const message = document.getElementById('message');
         const whyBtn = document.getElementById('whyButton');
+        const voiceBtn = document.getElementById('voiceButton');
         const music = document.getElementById('bgMusic');
+        const voiceAudio = document.getElementById('secretVoice');
         const counter = document.getElementById('counter');
+        const flash = document.getElementById('flash');
 
+        // --- EVENEMENT CLIC ---
         btn.addEventListener('click', () => {
-            music.play().catch(()=> {
-                console.log("Lecture bloquée par le navigateur");
-            });
+            music.play();
             btn.style.display = 'none';
-            document.getElementById('flash').style.animation = 'flashAnim 0.6s ease-out';
+            flash.style.animation = 'flashAnim 0.6s ease-out';
 
             setTimeout(() => {
                 heartContainer.style.display = 'block';
                 counter.style.display = 'block';
-                updateCounter();
                 startDiaporama();
                 startFallingHearts();
+                updateCounter();
                 displayPhrases();
             }, 300);
         });
 
-        // --- MACHINE À ÉCRIRE ---
+        // --- MACHINE A ECRIRE ---
         function typeWriter(text, i, fnCallback) {
             if (i < text.length) {
-                message.innerHTML = text.substring(0, i+1) + '<span aria-hidden="true">|</span>';
-                setTimeout(() => typeWriter(text, i + 1, fnCallback), 7000 / 100); // Vitesse adaptée
+                message.innerHTML = text.substring(0, i+1) + '<span style="color:gold">|</span>';
+                setTimeout(() => typeWriter(text, i + 1, fnCallback), 60);
             } else if (typeof fnCallback == 'function') {
-                setTimeout(fnCallback, 700);
+                setTimeout(fnCallback, 1000);
             }
         }
 
+        // --- LOGIQUE DES TEXTES ---
         function displayPhrases() {
             let index = 0;
             const next = () => {
@@ -193,58 +190,92 @@
                         setTimeout(() => {
                             heart.classList.remove('zoom-heart');
                             index++;
-                            setTimeout(next, 3000);
-                        }, 2000);
+                            setTimeout(next, 2000);
+                        }, 1500);
                     });
                 } else {
-                    whyBtn.style.display = 'inline-block';
+                    displayEpilogue();
                 }
             };
             next();
         }
 
-        // --- DIAPORAMA ---
-        let imgIndex = 0;
-        function startDiaporama() {
-            document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${images[imgIndex]}')`;
-            setInterval(() => {
-                imgIndex = (imgIndex + 1) % images.length;
-                document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${images[imgIndex]}')`;
-            }, 5000);
+        function displayEpilogue() {
+            let eIndex = 0;
+            const nextE = () => {
+                if (eIndex < epilogue.length) {
+                    heart.classList.add('zoom-heart');
+                    setTimeout(() => heart.classList.remove('zoom-heart'), 500);
+                    typeWriter(epilogue[eIndex], 0, () => {
+                        setTimeout(() => {
+                            eIndex++;
+                            setTimeout(nextE, 2000);
+                        }, 2000);
+                    });
+                } else {
+                    whyBtn.style.display = 'inline-block';
+                    voiceBtn.style.display = 'inline-block';
+                    setTimeout(finalTransition, 30000); // 30 secondes avant le noir
+                }
+            };
+            nextE();
         }
 
-        // --- COMPTEUR ---
+        // --- TRANSITION FINALE ---
+        function finalTransition() {
+            document.body.style.backgroundImage = "none";
+            document.body.style.backgroundColor = "black";
+            heartContainer.style.opacity = "0.3";
+            counter.style.display = "none";
+            music.volume = 0.3;
+            message.style.color = "white";
+            message.innerText = "Pour toujours... ❤️";
+        }
+
+        // --- FONCTIONS SECONDAIRES ---
         function updateCounter() {
             setInterval(() => {
-                const maintenant = new Date();
-                const diff = maintenant - dateRencontre;
-                const jours = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const heures = Math.floor((diff / (1000 * 60 * 60)) % 24);
-                const minutes = Math.floor((diff / 1000 / 60) % 60);
-                const secondes = Math.floor((diff / 1000) % 60);
-                counter.innerHTML = `Ensemble depuis : ${jours}j ${heures}h ${minutes}m ${secondes}s`;
+                const diff = new Date() - dateRencontre;
+                const j = Math.floor(diff / 86400000);
+                const h = Math.floor((diff / 3600000) % 24);
+                const m = Math.floor((diff / 60000) % 60);
+                const s = Math.floor((diff / 1000) % 60);
+                counter.innerHTML = `Ensemble depuis : ${j}j ${h}h ${m}m ${s}s`;
             }, 1000);
         }
 
-        // --- POURQUOI JE T'AIME ---
+        function startDiaporama() {
+            const changeImg = () => {
+                let url = images[Math.floor(Math.random() * images.length)];
+                document.body.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${url}')`;
+            };
+            changeImg();
+            setInterval(changeImg, 6000);
+        }
+
         whyBtn.addEventListener('click', () => {
+            createBurst();
             const r = raisons[Math.floor(Math.random() * raisons.length)];
             message.innerHTML = "";
             typeWriter(r, 0);
-            createBurst();
         });
 
-        // --- EFFETS SECONDAIRES (Burst & Hearts) ---
+        voiceBtn.addEventListener('click', () => {
+            music.volume = 0.2;
+            voiceAudio.play();
+            voiceAudio.onended = () => { music.volume = 1.0; };
+        });
+
         function createBurst() {
             for (let i = 0; i < 15; i++) {
                 const p = document.createElement('div');
                 p.classList.add('particle');
                 heartContainer.appendChild(p);
-                const angle = (i / 15) * Math.PI * 2;
-                const velocity = 80 + Math.random() * 60;
+                const a = (i / 15) * Math.PI * 2;
+                const v = 80 + Math.random() * 50;
                 p.animate([
                     { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
-                    { transform: `translate(calc(-50% + ${Math.cos(angle)*velocity}px), calc(-50% + ${Math.sin(angle)*velocity}px)) scale(0)`, opacity: 0 }
+                    { transform: `translate(calc(-50% + ${Math.cos(a)*v}px), calc(-50% + ${Math.sin(a)*v}px)) scale(0)`, opacity: 0 }
                 ], { duration: 1000 });
                 setTimeout(() => p.remove(), 1000);
             }
@@ -254,7 +285,7 @@
             setInterval(() => {
                 const h = document.createElement('div');
                 h.classList.add('falling-heart');
-                h.innerHTML = '❤️';
+                h.innerHTML = '❤️Je t"aime🌹';
                 h.style.left = Math.random() * 100 + 'vw';
                 h.style.fontSize = (Math.random() * 20 + 15) + 'px';
                 h.style.animationDuration = (Math.random() * 3 + 3) + 's';
